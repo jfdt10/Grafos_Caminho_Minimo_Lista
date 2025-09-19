@@ -4,6 +4,63 @@ Atividade prática da disciplina de **Grafos**, explorando algoritmos de caminho
 A atividade será feita em dupla.
 
 ---
+# Algoritmos de Caminho Mínimo em Grafos
+
+
+## Algoritmo de Dijkstra
+
+```
+Algoritmo
+início
+   d11 ← 0; dij ← ∞ ∀ i ∈ V e V = {1};   [ origem-origem zero; distâncias infinitas a partir da origem ]
+   A ← V; F ← ∅; anterior (i) ← 0 ∀ i;
+   enquanto A ≠ ∅ fazer
+      início
+         r ← v ∈ V | dir = min{dij}
+                        i∈A
+              [ acha o vértice mais próximo da origem ]
+         F ← F ∪ {r};  A ← A - {r};       [ o vértice r sai de Aberto para Fechado ]
+         S ← A ∩ N⁺(r)                   [ S são os sucessores de r ainda abertos ]
+         para todo i ∈ S fazer
+            Início
+               p ← min [dki-1, (dr + vri)]   [ compara o valor anterior com a nova soma ]
+               se p < dki-1 então
+                  início
+                     dki ← p; anterior (i) ← r;   [ ganhou a nova distância ! ]
+                  fim;
+            fim;
+      fim;
+fim.
+```
+
+## Algoritmo de Bellman-Ford
+
+```
+Algoritmo
+início
+   d11 ← 0;  d1i ← ∞  ∀ i ∈ V – {1};  anterior(i) ← 0  ∀ i;
+   enquanto ∃ (j,i) ∈ A | d1i > d1j + vji  fazer   [ varre todos os arcos aplicando o critério ]
+      início
+         d1i ← d1j + vji;  anterior(i) ← j;
+      fim;
+fim.
+```
+## Algoritmo de Floyd-Warshall
+
+```
+início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rij];
+    R0 ← [ ]; D^0 = [dij] ← V(G);
+    para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
+        início
+        para todo i, j = 1, ..., n fazer
+            se dik + dkj < dij então
+                início
+                dij ← dik + dkj;
+                rij ← rki;
+                fim;
+        fim;
+    fim.
+```
 
 ## 📂 Estrutura do Repositório
 
