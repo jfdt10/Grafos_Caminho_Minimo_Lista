@@ -9,6 +9,8 @@ A atividade será feita em dupla.
 
 O repositório será organizado da seguinte forma:
 
+
+
 ├── Cenario1/
 │ ├── main.py
 │ ├── graph1.txt
@@ -19,6 +21,9 @@ O repositório será organizado da seguinte forma:
 │ ├── main.py
 │ ├── grid_example.txt
 └── README.md
+
+
+
 
 ## 📘 Cenário 1: Determinando a estação central
 
