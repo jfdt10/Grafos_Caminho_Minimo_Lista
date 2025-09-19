@@ -22,7 +22,7 @@ O repositório será organizado da seguinte forma:
 │   ├── main.py
 │   ├── grid_example.txt
 └── README.md
-
+```
 
 ## 📘 Cenário 1: Determinando a estação central
 
