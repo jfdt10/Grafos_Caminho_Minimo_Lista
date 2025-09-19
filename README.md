@@ -11,18 +11,17 @@ O repositório será organizado da seguinte forma:
 
 
 
+```text
 ├── Cenario1/
-│ ├── main.py
-│ ├── graph1.txt
+│   ├── main.py
+│   ├── graph1.txt
 ├── Cenario2/
-│ ├── main.py
-│ ├── graph2.txt
+│   ├── main.py
+│   ├── graph2.txt
 ├── Cenario3/
-│ ├── main.py
-│ ├── grid_example.txt
+│   ├── main.py
+│   ├── grid_example.txt
 └── README.md
-
-
 
 
 ## 📘 Cenário 1: Determinando a estação central
