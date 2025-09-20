@@ -84,37 +84,6 @@ O programa automaticamente:
 4. Mostra o caminho mínimo e consumo energético
 5. Detalha cada trecho do caminho
 
-## Saída Esperada
-
-```
-=== CENARIO 2: CARRO ELETRICO COM REGENERACAO ===
-Algoritmo utilizado: Bellman-Ford
-Motivo: Grafo direcionado com pesos negativos (regeneracao de energia)
-
-Grafo carregado:
-  0 -> 1: 25 Wh (consumo)
-  0 -> 2: 12 Wh (consumo)
-  0 -> 3: -8 Wh (regeneracao)
-  ...
-
-RESULTADOS:
-Caminho minimo (vertice 0 -> vertice 6): 0 -> 3 -> 2 -> 1 -> 5 -> 6
-Energia liquida consumida: -2 Wh
-  > O carro chegara com 2 Wh a mais na bateria!
-
-Detalhamento do caminho:
-  0 -> 3: -8 Wh (Regeneracao)
-  3 -> 2: -5 Wh (Regeneracao)
-  2 -> 1: -6 Wh (Regeneracao)
-  1 -> 5: -4 Wh (Regeneracao)
-  5 -> 6: +5 Wh (Consumo)
-```
-
-## Tratamento de Casos Especiais
-
-- **Ciclo negativo:** Detecta e alerta sobre ciclos de energia infinita
-- **Caminho inexistente:** Verifica se existe caminho entre origem e destino
-- **Erros de arquivo:** Tratamento robusto de arquivos inexistentes ou malformados
 
 ## Dependências
 
