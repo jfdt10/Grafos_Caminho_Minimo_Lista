@@ -1,1 +1,158 @@
 
+""" 
+Algoritmo de Floyd-Warshall
+
+    início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rij];
+    R0 ← [ ]; D^0 = [dij] ← V(G);
+    para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
+        início
+        para todo i, j = 1, ..., n fazer
+            se dik + dkj < dij então
+                início
+                dij ← dik + dkj;
+                rij ← rki;
+                fim;
+        fim;
+    fim
+"""
+
+INF = float('inf') # ausência de aresta para conectar dois vértices
+
+def carregar_grafo(nome_arquivo):
+    """
+    Lê o arquivo de entrada e cria a matriz de adjacências (distâncias)
+    e a matriz de roteamento inicial.
+    """
+    try:
+        with open(nome_arquivo, 'r') as f:
+            # Lê a primeira linha para obter o número de vértices e arestas
+            num_vertices, num_arestas = map(int, f.readline().split()) # lida com espaços em branco e tabs
+
+            # Inicializa a matriz de distâncias (D) e de roteamento (R)
+            distancias = [[INF] * num_vertices for _ in range(num_vertices)] # D^0 = [dij] ← V(G);
+            roteamento = [[None] * num_vertices for _ in range(num_vertices)] # R0 ← [ ];
+
+            for i in range(num_vertices):
+                distancias[i][i] = 0 # Distância para si mesmo é zero
+                roteamento[i][i] = i + 1 # Rota para si mesmo é o próprio vértice 
+
+            # Preenche as matrizes com os dados das arestas
+            for i in range(num_arestas): 
+                linha = f.readline().strip()
+                v1, v2, custo = map(int, linha.split())
+                idx1, idx2 = v1 - 1, v2 - 1
+
+                # Grafo não-direcionado
+                distancias[idx1][idx2] = custo
+                roteamento[idx1][idx2] = v2
+
+                distancias[idx2][idx1] = custo
+                roteamento[idx2][idx1] = v1
+            
+        return num_vertices, distancias, roteamento
+        
+    except FileNotFoundError:
+        print(f"Erro: Arquivo '{nome_arquivo}' não encontrado.")
+        return None, None, None
+    except Exception as e:
+        print(f"Ocorreu um erro ao ler o arquivo: {e}")
+        return None, None, None
+
+def floyd_warshall(num_vertices, distancias, roteamento):
+    """
+    Aplica o algoritmo de Floyd-Warshall, atualizando tanto a matriz de 
+    distâncias quanto a de roteamento.
+    """
+    dist = [list(row) for row in distancias] # D^0 = [dij] ← V(G);
+    rot = [list(row) for row in roteamento] # R0 ← [ ];
+
+    for k in range(num_vertices): # para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
+        for i in range(num_vertices): # para todo i, j = 1, ..., n fazer
+            for j in range(num_vertices): # para todo i, j = 1, ..., n fazer
+                if dist[i][k] + dist[k][j] < dist[i][j]: # se dik + dkj < dij então
+                    dist[i][j] = dist[i][k] + dist[k][j] # dij ← dik + dkj;
+                    rot[i][j] = rot[i][k] # rij ← rki;
+    return dist, rot 
+
+def reconstruir_caminho(origem, destino, roteamento):
+    """
+    Usa a matriz de roteamento para encontrar o caminho completo entre dois vértices.
+    """
+    idx_origem, idx_destino = origem - 1, destino - 1
+    
+    if roteamento[idx_origem][idx_destino] is None:
+        return []
+
+    caminho = [origem]
+    atual = origem
+    while atual != destino:
+        proximo_passo = roteamento[atual - 1][destino - 1]
+        caminho.append(proximo_passo)
+        atual = proximo_passo
+        
+    return caminho
+
+def analisar_resultados_por_soma(num_vertices, matriz_distancias):
+    """
+    Analisa a matriz de distâncias para encontrar a estação central
+    baseado no MENOR SOMATÓRIO de distâncias.
+    """
+    menor_soma = INF # Inicializa com infinito
+    estacao_central = None # Índice do vértice da estação central (0-based) 
+
+    # Para cada vértice 'i', calcula o somatório de suas distâncias
+    for i in range(num_vertices):
+        soma_distancias_atual = sum(matriz_distancias[i])
+        # Verifica se este vértice é um candidato melhor a estação central
+        if soma_distancias_atual < menor_soma:
+            menor_soma = soma_distancias_atual
+            estacao_central = i # Armazena o índice (0-based)
+    
+    if estacao_central is None:
+        # nenhum vértice alcança todos os demais
+        return None, [], None, INF
+
+    # Coleta as informações finais
+    estacao_central_final = estacao_central + 1 # Converte para 1-based
+    vetor_distancias = matriz_distancias[estacao_central] # Distâncias da estação central para todos os outros vértices
+    
+    # O vértice mais distante e sua distância ainda são úteis
+    distancia_maxima = max(vetor_distancias) # Maior distância da estação central
+    vertice_mais_distante = vetor_distancias.index(distancia_maxima) + 1 # Converte para 1-based
+            
+    return estacao_central_final, vetor_distancias, vertice_mais_distante, distancia_maxima
+
+def formatar_matriz_para_impressao(matriz, titulo):
+    """Impressão simples e alinhada da matriz de distâncias."""
+    if not matriz or not matriz[0]:
+        return f"\n{titulo}:\n<matriz vazia>\n"
+
+    n = len(matriz)
+    colunas = " " * 4 + " ".join(f"{i+1:>4}" for i in range(n))
+    linhas = [f"\n{titulo}:", colunas]
+    for i, linha in enumerate(matriz):
+        itens = [ "inf" if item == INF else str(int(item)) for item in linha ]
+        linhas.append(f"{i+1:2} " + " ".join(f"{it:>4}" for it in itens))
+    return "\n".join(linhas) + "\n"
+
+if __name__ == "__main__":
+    nome_arquivo = "graph1.txt"
+    
+    num_vertices, dist_inicial, rot_inicial = carregar_grafo(nome_arquivo)
+
+    if num_vertices:
+        matriz_distancias, matriz_roteamento = floyd_warshall(num_vertices, dist_inicial, rot_inicial)
+        
+        central, vetor, mais_distante, dist_max = analisar_resultados_por_soma(num_vertices, matriz_distancias)
+
+
+        print(f"\n1. Estação Central Escolhida: {central}")
+        
+        print(f"\n2. Vetor de distâncias da estação {central} aos demais vértices:")
+        print(f"   {vetor}")
+
+        print(f"\n3. Vértice mais distante da estação central (e sua distância):")
+        print(f"   Vértice: {mais_distante}\tDistância: {dist_max}")
+
+        print(formatar_matriz_para_impressao(matriz_distancias, "\n4. Matriz de distâncias mínimas entre todos os pares"))
+        print(formatar_matriz_para_impressao(matriz_roteamento, "\n5. Matriz de Roteamento"))
