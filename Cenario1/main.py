@@ -1,19 +1,18 @@
 
 """ 
-Algoritmo de Floyd-Warshall
-
-    início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rij];
-    R0 ← [ ]; D^0 = [dij] ← V(G);
-    para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
+Algoritmo
+início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rᵢⱼ];
+    rᵢⱼ ← j  ∀i; D⁰ = [dᵢⱼ] ← V(G);
+    para k = 1, ..., n fazer [ k é o vértice-base da iteração ]
         início
-        para todo i, j = 1, ..., n fazer
-            se dik + dkj < dij então
-                início
-                dij ← dik + dkj;
-                rij ← rki;
-                fim;
+            para todo i, j = 1, ..., n fazer
+                se dᵢₖ + dₖⱼ < dᵢⱼ então
+                    início
+                        dᵢⱼ ← dᵢₖ + dₖⱼ;
+                        rᵢⱼ ← rᵢₖ;
+                    fim;
         fim;
-    fim
+fim.
 """
 
 INF = float('inf') # ausência de aresta para conectar dois vértices
@@ -30,7 +29,7 @@ def carregar_grafo(nome_arquivo):
 
             # Inicializa a matriz de distâncias (D) e de roteamento (R)
             distancias = [[INF] * num_vertices for _ in range(num_vertices)] # D^0 = [dij] ← V(G);
-            roteamento = [[None] * num_vertices for _ in range(num_vertices)] # R0 ← [ ];
+            roteamento = [[None] * num_vertices for _ in range(num_vertices)] # R^0 ← rᵢⱼ ← j ;
 
             for i in range(num_vertices):
                 distancias[i][i] = 0 # Distância para si mesmo é zero
@@ -64,14 +63,14 @@ def floyd_warshall(num_vertices, distancias, roteamento):
     distâncias quanto a de roteamento.
     """
     dist = [list(row) for row in distancias] # D^0 = [dij] ← V(G);
-    rot = [list(row) for row in roteamento] # R0 ← [ ];
+    rot = [list(row) for row in roteamento] # R^0 ← rᵢⱼ ← j ;
 
     for k in range(num_vertices): # para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
         for i in range(num_vertices): # para todo i, j = 1, ..., n fazer
             for j in range(num_vertices): # para todo i, j = 1, ..., n fazer
                 if dist[i][k] + dist[k][j] < dist[i][j]: # se dik + dkj < dij então
                     dist[i][j] = dist[i][k] + dist[k][j] # dij ← dik + dkj;
-                    rot[i][j] = rot[i][k] # rij ← rki;
+                    rot[i][j] = rot[i][k] # rij ← rik;
     return dist, rot 
 
 def reconstruir_caminho(origem, destino, roteamento):
