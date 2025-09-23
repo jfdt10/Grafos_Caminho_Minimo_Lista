@@ -12,25 +12,25 @@ A atividade será feita em dupla.
 ```
 Algoritmo
 início
-   d11 ← 0; dij ← ∞ ∀ i ∈ V e V = {1};   [ origem-origem zero; distâncias infinitas a partir da origem ]
-   A ← V; F ← ∅; anterior (i) ← 0 ∀ i;
-   enquanto A ≠ ∅ fazer
-      início
-         r ← v ∈ V | dir = min{dij}
-                        i∈A
-              [ acha o vértice mais próximo da origem ]
-         F ← F ∪ {r};  A ← A - {r};       [ o vértice r sai de Aberto para Fechado ]
-         S ← A ∩ N⁺(r)                   [ S são os sucessores de r ainda abertos ]
-         para todo i ∈ S fazer
-            Início
-               p ← min [dki-1, (dr + vri)]   [ compara o valor anterior com a nova soma ]
-               se p < dki-1 então
-                  início
-                     dki ← p; anterior (i) ← r;   [ ganhou a nova distância ! ]
-                  fim;
-            fim;
-      fim;
+    d₁₁ ← 0; d₁ᵢ ← ∞ ∀ i ∈ V - {1};  < distância origem-origem zero; distâncias a partir da origem infinitas >
+    A ← V; F ← ∅; anterior (i) ← 0 ∀ i;
+    enquanto A ≠ ∅ fazer
+        início
+            r ← v ∈ V | d₁ᵣ = min[d₁ⱼ]      < acha o vértice mais próximo da origem >
+                              i∈A
+            F ← F ∪ {r}; A ← A - {r};      < o vértice r sai de Aberto para Fechado >
+            S ← A ∩ N⁺(r)                   < S são os sucessores de r ainda abertos >
+            para todo i ∈ S fazer
+                início
+                    p ← min [d₁ᵢᵏ⁻¹, (d₁ᵣ + vᵣᵢ)]  < compara o valor anterior com a nova soma >
+                    se p < d₁ᵢᵏ⁻¹ então
+                        início
+                            d₁ᵢᵏ ← p; anterior (i) ← r;  < ganhou a nova distância ! >
+                        fim;
+                fim;
+        fim;
 fim.
+
 ```
 
 ## Algoritmo de Bellman-Ford
@@ -38,28 +38,29 @@ fim.
 ```
 Algoritmo
 início
-   d11 ← 0;  d1i ← ∞  ∀ i ∈ V – {1};  anterior(i) ← 0  ∀ i;
-   enquanto ∃ (j,i) ∈ A | d1i > d1j + vji  fazer   [ varre todos os arcos aplicando o critério ]
-      início
-         d1i ← d1j + vji;  anterior(i) ← j;
-      fim;
+    d₁₁ ← 0; d₁ᵢ ← ∞ ∀ i ∈ V - {1}; anterior (i) ← 0 ∀ i;
+    enquanto ∃ (j,i) ∈ A | d₁ᵢ > d₁ⱼ + vⱼᵢ fazer  < varre todos os arcos aplicando o critério >
+        início
+            d₁ᵢ ← d₁ⱼ + vⱼᵢ; anterior (i) ← j;
+        fim;
 fim.
 ```
 ## Algoritmo de Floyd-Warshall
 
 ```
-início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rij];
-    R0 ← [ ]; D^0 = [dij] ← V(G);
-    para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
+Algoritmo
+início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rᵢⱼ];
+    rᵢⱼ ← j  ∀i; D⁰ = [dᵢⱼ] ← V(G);
+    para k = 1, ..., n fazer [ k é o vértice-base da iteração ]
         início
-        para todo i, j = 1, ..., n fazer
-            se dik + dkj < dij então
-                início
-                dij ← dik + dkj;
-                rij ← rki;
-                fim;
+            para todo i, j = 1, ..., n fazer
+                se dᵢₖ + dₖⱼ < dᵢⱼ então
+                    início
+                        dᵢⱼ ← dᵢₖ + dₖⱼ;
+                        rᵢⱼ ← rᵢₖ;
+                    fim;
         fim;
-    fim.
+fim.
 ```
 
 ## 📂 Estrutura do Repositório
