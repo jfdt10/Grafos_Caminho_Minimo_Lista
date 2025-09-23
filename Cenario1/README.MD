@@ -17,19 +17,19 @@ O algoritmo de Floyd-Warshall foi escolhido por sua capacidade de retornar a dis
 #### Pseudocódigo Clássico do Floyd-Warshall Do livro de Grafos: Introdução e Prática de  Paulo Oswaldo Boaventura Netto (Editora Blucher)
 
 ```Pseudo-Código
-início
-    <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rij];
-    R0 ← [ ]; D^0 = [dij] ← V(G);
-    para k = 1, ..., n fazer    [ k é o vértice-base da iteração ]
+
+início <dados G = (V,E); matriz de valores V(G); matriz de roteamento R = [rᵢⱼ];
+    rᵢⱼ ← j  ∀i; D⁰ = [dᵢⱼ] ← V(G);
+    para k = 1, ..., n fazer [ k é o vértice-base da iteração ]
         início
-        para todo i, j = 1, ..., n fazer
-            se dik + dkj < dij então
-                início
-                dij ← dik + dkj;
-                rij ← rki;
-                fim;
+            para todo i, j = 1, ..., n fazer
+                se dᵢₖ + dₖⱼ < dᵢⱼ então
+                    início
+                        dᵢⱼ ← dᵢₖ + dₖⱼ;
+                        rᵢⱼ ← rᵢₖ;
+                    fim;
         fim;
-    fim
+fim.
 ```
 
 #### Implementação em Python
@@ -38,7 +38,7 @@ início
 def floyd_warshall(num_vertices, distancias, roteamento):
     # Cópia das matrizes para evitar modificação da original
     dist = [list(row) for row in distancias]  # D^0 = [dij] ← V(G)
-    rot = [list(row) for row in roteamento]   # R0 ← [ ]
+    rot = [list(row) for row in roteamento]   # R^0 =   rᵢⱼ ← j  ∀i
     
     # Algoritmo principal: para cada vértice intermediário k
     for k in range(num_vertices):              # para k = 1, ..., n fazer
@@ -47,7 +47,7 @@ def floyd_warshall(num_vertices, distancias, roteamento):
                 # Verifica se o caminho via k é menor
                 if dist[i][k] + dist[k][j] < dist[i][j]:  # se dik + dkj < dij então
                     dist[i][j] = dist[i][k] + dist[k][j]   # dij ← dik + dkj
-                    rot[i][j] = rot[i][k]                   # rij ← rki
+                    rot[i][j] = rot[i][k]                   # rij ← rik
                 
     return dist, rot
 ```
@@ -57,12 +57,12 @@ def floyd_warshall(num_vertices, distancias, roteamento):
 | Aspecto | Pseudocódigo Clássico | Implementação Python |
 |---------|----------------------|---------------------|
 | **Inicialização** | `D^0 = [dij] ← V(G)` | `dist = [list(row) for row in distancias]` |
-| **Roteamento** | `R0 ← [ ]` | `rot = [list(row) for row in roteamento]` |
+| **Roteamento** | `R^0 ←  rᵢⱼ ← j  ∀i` | `rot = [list(row) for row in roteamento]` |
 | **Loop principal** | `para k = 1, ..., n fazer` | `for k in range(num_vertices)` |
 | **Loops aninhados** | `para todo i, j = 1, ..., n fazer` | `for i in range(num_vertices)` |
 | **Condição** | `se dik + dkj < dij então` | `if dist[i][k] + dist[k][j] < dist[i][j]` |
 | **Atualização distância** | `dij ← dik + dkj` | `dist[i][j] = dist[i][k] + dist[k][j]` |
-| **Atualização roteamento** | `rij ← rki` | `rot[i][j] = rot[i][k]` |
+| **Atualização roteamento** | `rij ← rik` | `rot[i][j] = rot[i][k]` |
 
 **Otimizações implementadas na versão Python:**
 - Cópia das matrizes para preservar os dados originais
