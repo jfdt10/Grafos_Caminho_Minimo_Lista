@@ -91,34 +91,38 @@ def reconstruir_caminho(origem, destino, roteamento):
         
     return caminho
 
-def analisar_resultados_por_soma(num_vertices, matriz_distancias):
-    """
-    Analisa a matriz de distâncias para encontrar a estação central
-    baseado no MENOR SOMATÓRIO de distâncias.
-    """
-    menor_soma = INF # Inicializa com infinito
-    estacao_central = None # Índice do vértice da estação central (0-based) 
 
-    # Para cada vértice 'i', calcula o somatório de suas distâncias
+def analisar_resultados(num_vertices, matriz_distancias):
+    """
+    Analisa a matriz de distâncias para encontrar a estação central,
+    usando o menor somatório como critério principal e a menor
+    distância máxima como desempate.
+    """
+    menor_soma = INF
+    melhor_dist_max = INF
+    estacao_central = None
+
     for i in range(num_vertices):
         soma_distancias_atual = sum(matriz_distancias[i])
-        # Verifica se este vértice é um candidato melhor a estação central
+        dist_max_atual = max(matriz_distancias[i])
+
         if soma_distancias_atual < menor_soma:
             menor_soma = soma_distancias_atual
-            estacao_central = i # Armazena o índice (0-based)
-    
+            melhor_dist_max = dist_max_atual
+            estacao_central = i
+        elif soma_distancias_atual == menor_soma:
+            if dist_max_atual < melhor_dist_max:
+                melhor_dist_max = dist_max_atual
+                estacao_central = i
+
     if estacao_central is None:
-        # nenhum vértice alcança todos os demais
         return None, [], None, INF
 
-    # Coleta as informações finais
-    estacao_central_final = estacao_central + 1 # Converte para 1-based
-    vetor_distancias = matriz_distancias[estacao_central] # Distâncias da estação central para todos os outros vértices
-    
-    # O vértice mais distante e sua distância ainda são úteis
-    distancia_maxima = max(vetor_distancias) # Maior distância da estação central
-    vertice_mais_distante = vetor_distancias.index(distancia_maxima) + 1 # Converte para 1-based
-            
+    estacao_central_final = estacao_central + 1
+    vetor_distancias = matriz_distancias[estacao_central]
+    distancia_maxima = max(vetor_distancias)
+    vertice_mais_distante = vetor_distancias.index(distancia_maxima) + 1
+
     return estacao_central_final, vetor_distancias, vertice_mais_distante, distancia_maxima
 
 def formatar_matriz_para_impressao(matriz, titulo):
@@ -142,7 +146,7 @@ if __name__ == "__main__":
     if num_vertices:
         matriz_distancias, matriz_roteamento = floyd_warshall(num_vertices, dist_inicial, rot_inicial)
         
-        central, vetor, mais_distante, dist_max = analisar_resultados_por_soma(num_vertices, matriz_distancias)
+        central, vetor, mais_distante, dist_max = analisar_resultados(num_vertices, matriz_distancias)
 
 
         print(f"\n1. Estação Central Escolhida: {central}")

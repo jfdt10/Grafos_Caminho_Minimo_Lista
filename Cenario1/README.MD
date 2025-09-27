@@ -75,7 +75,7 @@ def floyd_warshall(num_vertices, distancias, roteamento):
 - `floyd_warshall(num_vertices, distancias, roteamento)`: Implementa o algoritmo principal
 - `reconstruir_caminho(origem, destino, roteamento)`: Reconstrói o caminho mínimo
 - `carregar_grafo(nome_arquivo)`: Lê grafo do arquivo de entrada
-- `analisar_resultados_por_soma(num_vertices, matriz_distancias)`: Analisa a matriz de distâncias para encontrar a estação central baseado no   MENOR SOMATÓRIO de distâncias.
+- `analisar_resultados(num_vertices, matriz_distancias)`: Analisa a matriz de distâncias para encontrar a estação central baseado no menor somatório de distâncias e a menor distância máxima como critério de desempate.
 - `formatar_matriz_para_impressao(matriz, titulo)`: Formata a matriz para impressão.
 
 
