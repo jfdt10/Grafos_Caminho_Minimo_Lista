@@ -4,6 +4,7 @@ class RobotPathfinder:
     """
     Baseado no pseudocódigo do Dijkstra:
     
+    Pseucódigo do Dijkstra Ideal Geral:
     DIJKSTRA(G, w, s):
     1. INITIALIZE-SINGLE-SOURCE(G, s)
     2. S = ∅
@@ -14,6 +15,28 @@ class RobotPathfinder:
     7.    for each vertex v ∈ G.Adj[u]:
     8.       RELAX(u, v, w)
     """
+    """
+    Algoritmo (Pseudocódigo Clássico do Dijkstra Do livro de Grafos: Introdução e Prática de  Paulo Oswaldo Boaventura Netto (Editora Blucher))
+início
+    d₁₁ ← 0; d₁ᵢ ← ∞ ∀ i ∈ V - {1};  < distância origem-origem zero; distâncias a partir da origem infinitas >
+    A ← V; F ← ∅; anterior (i) ← 0 ∀ i;
+    enquanto A ≠ ∅ fazer
+        início
+            r ← v ∈ V | d₁ᵣ = min[d₁ⱼ]      < acha o vértice mais próximo da origem >
+                              i∈A
+            F ← F ∪ {r}; A ← A - {r};      < o vértice r sai de Aberto para Fechado >
+            S ← A ∩ N⁺(r)                   < S são os sucessores de r ainda abertos >
+            para todo i ∈ S fazer
+                início
+                    p ← min [d₁ᵢᵏ⁻¹, (d₁ᵣ + vᵣᵢ)]  < compara o valor anterior com a nova soma >
+                    se p < d₁ᵢᵏ⁻¹ então
+                        início
+                            d₁ᵢᵏ ← p; anterior (i) ← r;  < ganhou a nova distância ! >
+                        fim;
+                fim;
+        fim;
+fim.
+"""
     
     def __init__(self, grid_file: str):
         """
@@ -120,54 +143,59 @@ class RobotPathfinder:
             Retorna (None, -1) se nao houver caminho
         """
         #INITIALIZE-SINGLE-SOURCE
-        distances = {}
-        predecessors = {}
-        visited = set()
+        distances = {} # d₁ᵢ (dicionário de distâncias)
+        predecessors = {} # anterior(i)
+        visited = set() # F (conjunto de vértices fechados)
         
-        #inicializa todas as posicões com distância infinita
+        #inicializa todas as posicões com distância infinita # d₁ᵢ ← ∞ ∀ i ∈ V
         for i in range(self.rows):
             for j in range(self.cols):
                 if self.grid[i][j] != '#':  # nao acessa obstáculos
                     distances[(i, j)] = float('inf')
                     predecessors[(i, j)] = None
         
-        # distância da origem para si mesma e zero
+        # distância da origem para si mesma e zero # d₁₁ ← 0
         distances[self.start] = 0
         
         # Priority queue (heap) - equivale ao conjunto Q no pseudocódigo (usei heap para melhorar eficiência, LEMBRAR DE PERGUNTAR AO PROFESSOR)
         #ordenar por distancia
-        pq = [(0, self.start)]
+        pq = [(0, self.start)] # A ← V (conjunto de vértices abertos)
         
         print(f"Iniciando busca de {self.start} para {self.goal}")
         
-        #loop principal do Dijkstra
-        while pq:  #while Q ≠ ∅
+        #loop principal do Dijkstra 
+        while pq:  #while Q ≠ ∅ ou A ≠ ∅
+                   
 
             # EXTRACT-MIN(Q):extrai vertice com menor distância
-            current_dist, current_pos = heapq.heappop(pq)
+            current_dist, current_pos = heapq.heappop(pq) # r ← v ∈ V | d₁ᵣ = min[d₁ⱼ]
             
             #se já visitamos esta posicao, pula (pode ter repeticao)
             if current_pos in visited:
                 continue
             
             #S = S ∪ {u}:adiciona ao conjunto de vertices visitados
-            visited.add(current_pos)
+            visited.add(current_pos) # F ← F ∪ {r}; A ← A - {r};
             
             #se chegamos ao objetivo, podemos parar
             if current_pos == self.goal:
                 break
-            
+            # S ← A ∩ N⁺(r)  (vizinhos ainda não visitados)
+            # para todo i ∈ S fazer
             #para cada vizinho do vertice atual
             for neighbor_pos in self._get_neighbors(current_pos):
                 if neighbor_pos in visited:
                     continue
                 
+                # p ← min[d₁ᵢᵏ⁻¹, (d₁ᵣ + vᵣᵢ)]
                 #calcula nova distância atraves do caminho atual
                 edge_weight = self._get_cell_cost(neighbor_pos[0], neighbor_pos[1])
                 new_distance = current_dist + edge_weight
                 
+                 # se p < d₁ᵢᵏ⁻¹ então
                 #RELAX(u, v, w): relaxamento da aresta
                 if new_distance < distances[neighbor_pos]:
+                    # d₁ᵢᵏ ← p; anterior(i) ← r
                     distances[neighbor_pos] = new_distance
                     predecessors[neighbor_pos] = current_pos
                     heapq.heappush(pq, (new_distance, neighbor_pos))
