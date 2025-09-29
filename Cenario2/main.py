@@ -1,3 +1,12 @@
+"""
+início
+   d11 ← 0;  d1i ← ∞  ∀ i ∈ V – {1};  anterior(i) ← 0  ∀ i;
+   enquanto ∃ (j,i) ∈ A | d1i > d1j + vji  fazer   [ varre todos os arcos aplicando o critério ]
+      início
+         d1i ← d1j + vji;  anterior(i) ← j;
+      fim;
+fim.
+"""
 def bellman_ford(grafo, origem):
     """
     Recebe:
