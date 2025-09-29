@@ -70,16 +70,22 @@ O repositório será organizado da seguinte forma:
 
 
 ```text
+|── Grafos_Caminho_Minimo_Lista/
 ├── Cenario1/
 │   ├── main.py
+│   ├── graph.png
 │   ├── graph1.txt
+│   ├── README.md
 ├── Cenario2/
 │   ├── main.py
-│   ├── graph2.txt
+│   ├── graph2.txt 
+│   ├── graph2.png
+│   ├── README.md
 ├── Cenario3/
 │   ├── main.py
 │   ├── grid_example.txt
-└── README.md
+│   ├── README.md
+├── README.md
 ```
 
 ## 📘 Cenário 1: Determinando a estação central
@@ -128,6 +134,23 @@ O repositório será organizado da seguinte forma:
    ```bash
    git clone https://github.com/jfdt10/Grafos_Caminho_Minimo_Lista
 
+2. Para executar cada cenário:
+   ```bash
+   cd Cenario1
+   python main.py
+   ```
+
+   ```bash
+   cd Cenario2
+   python main.py
+   ```
+
+   ```bash
+   cd Cenario3
+   python main.py
+   ```
+
+-----------------------------------------
 
 👥 Autores
 
